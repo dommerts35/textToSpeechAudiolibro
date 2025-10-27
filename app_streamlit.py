@@ -1,4 +1,3 @@
-# app_streamlit.py
 import streamlit as st
 import os
 import sys
@@ -6,14 +5,12 @@ from pathlib import Path
 import tempfile
 import base64
 
-# Añadir el directorio actual al path para importar nuestros módulos
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from pdf_processor import PDFProcessor
 from audio_manager import AudioManager
 from config import Config
 
-# Configurar la página
 st.set_page_config(
     page_title="PDF to Audiobook Converter",
     page_icon="🎧",
@@ -21,7 +18,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# CSS personalizado
 st.markdown("""
 <style>
     .main-header {
@@ -61,14 +57,11 @@ class StreamlitApp:
         self.audio_manager = AudioManager(self.config)
 
     def run(self):
-        # Header principal
         st.markdown('<h1 class="main-header">📚 PDF to Audiobook Converter</h1>', unsafe_allow_html=True)
 
-        # Sidebar para configuración
         with st.sidebar:
             st.header("⚙️ Configuración")
 
-            # Configuración de audio
             st.subheader("Configuración de Audio")
             language = st.selectbox(
                 "Idioma de la voz",
@@ -83,7 +76,6 @@ class StreamlitApp:
                 help="Habilita para una voz más lenta y clara"
             )
 
-            # Configuración de procesamiento
             st.subheader("Procesamiento")
             detect_chapters = st.checkbox(
                 "Detección automática de capítulos",
@@ -100,12 +92,10 @@ class StreamlitApp:
                 help="Tamaño máximo de texto por archivo de audio"
             )
 
-            # Actualizar configuración
             self.config.tts.language = language
             self.config.tts.slow = slow_speech
             self.config.tts.max_chunk_length = max_chunk_size
 
-        # Área principal
         col1, col2 = st.columns([2, 1])
 
         with col1:
@@ -118,20 +108,18 @@ class StreamlitApp:
             )
 
             if uploaded_file is not None:
-                # Guardar archivo temporal
+
                 with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
                     tmp_file.write(uploaded_file.getvalue())
                     pdf_path = tmp_file.name
 
-                # Mostrar información del archivo
-                file_size = uploaded_file.size / (1024 * 1024)  # MB
+
+                file_size = uploaded_file.size / (1024 * 1024)
                 st.info(f"📄 **Archivo:** {uploaded_file.name} | 📊 **Tamaño:** {file_size:.2f} MB")
 
-                # Botón de conversión
                 if st.button("🎧 Convertir a Audiobook", type="primary", use_container_width=True):
                     self.process_pdf(pdf_path, uploaded_file.name)
 
-                # Limpiar archivo temporal después del procesamiento
                 if os.path.exists(pdf_path):
                     os.unlink(pdf_path)
 
@@ -164,16 +152,14 @@ class StreamlitApp:
     def process_pdf(self, pdf_path: str, original_filename: str):
         """Procesa el PDF y convierte a audio"""
         try:
-            # Mostrar progreso
             progress_bar = st.progress(0)
             status_text = st.empty()
 
-            # Paso 1: Extraer texto
+
             status_text.text("📖 Extrayendo texto del PDF...")
             metadata = self.pdf_processor.extract_text_with_metadata(pdf_path)
             progress_bar.progress(25)
 
-            # Mostrar información del documento
             with st.expander("📊 Información del Documento", expanded=True):
                 col1, col2, col3 = st.columns(3)
                 with col1:
@@ -184,12 +170,10 @@ class StreamlitApp:
                 with col3:
                     st.metric("Palabras", f"{metadata['words']:,}")
 
-            # Paso 2: Dividir en capítulos
             status_text.text("📑 Organizando en capítulos...")
             chapters = self.pdf_processor.split_into_chapters(metadata['text'])
             progress_bar.progress(50)
 
-            # Mostrar capítulos detectados
             if len(chapters) > 1:
                 with st.expander(f"📖 Capítulos Detectados ({len(chapters)})", expanded=True):
                     for i, chapter in enumerate(chapters):
@@ -202,21 +186,17 @@ class StreamlitApp:
                             with col2:
                                 st.text(f"Capítulo {i + 1}")
 
-            # Paso 3: Convertir a audio
             status_text.text("🎙️ Convirtiendo a audio...")
 
-            # Crear directorio de salida
             output_dir = "streamlit_outputs"
             os.makedirs(output_dir, exist_ok=True)
 
             base_name = Path(original_filename).stem
             output_path = os.path.join(output_dir, f"{base_name}_audiobook.mp3")
 
-            # Convertir capítulos
             results = self.audio_manager.convert_chapters_to_audio(chapters, output_path)
             progress_bar.progress(100)
 
-            # Mostrar resultados
             self.show_results(results, output_dir)
 
             status_text.text("✅ Conversión completada!")
@@ -228,7 +208,6 @@ class StreamlitApp:
         """Muestra los resultados de la conversión"""
         st.header("🎉 Conversión Completada")
 
-        # Estadísticas
         col1, col2, col3 = st.columns(3)
         with col1:
             st.metric("Capítulos Totales", results['total_chapters'])
@@ -237,7 +216,6 @@ class StreamlitApp:
         with col3:
             st.metric("Errores", len(results['failed']))
 
-        # Archivos generados
         if results['successful']:
             st.subheader("📁 Archivos de Audio Generados")
 
@@ -252,7 +230,6 @@ class StreamlitApp:
                         st.text(f"{chapter['duration_estimate']:.1f} min")
 
                     with col3:
-                        # Botón de descarga
                         with open(chapter['file_path'], "rb") as file:
                             btn = st.download_button(
                                 label="📥 Descargar",
@@ -262,7 +239,6 @@ class StreamlitApp:
                                 key=f"dl_{chapter['file_path']}"
                             )
 
-            # Descargar todos los archivos (ZIP)
             if len(results['successful']) > 1:
                 st.info("💡 Para descargar todos los archivos, haz clic en cada botón de descarga individualmente.")
 
@@ -276,4 +252,5 @@ def main():
 
 
 if __name__ == "__main__":
+
     main()
