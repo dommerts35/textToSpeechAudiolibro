@@ -205,7 +205,6 @@ class StreamlitApp:
             st.error(f"❌ Error durante la conversión: {str(e)}")
 
     def show_results(self, results: dict, output_dir: str):
-        """Muestra los resultados de la conversión"""
         st.header("🎉 Conversión Completada")
 
         col1, col2, col3 = st.columns(3)
@@ -254,3 +253,4 @@ def main():
 if __name__ == "__main__":
 
     main()
+
