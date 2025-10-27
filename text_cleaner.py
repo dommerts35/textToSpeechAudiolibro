@@ -7,14 +7,12 @@ import logging
 class TextCleaner:
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        # Descargar recursos de NLTK si no están disponibles
         try:
             nltk.data.find('tokenizers/punkt')
         except LookupError:
             nltk.download('punkt')
 
     def clean_text(self, text: str) -> str:
-        """Aplica todas las limpiezas al texto"""
         text = self._remove_header_footer(text)
         text = self._fix_punctuation(text)
         text = self._normalize_paragraphs(text)
@@ -25,10 +23,10 @@ class TextCleaner:
     def _remove_header_footer(self, text: str) -> str:
         """Elimina encabezados y pies de página comunes"""
         patterns = [
-            r'\n\d+\s*\n',  # Números de página solos
-            r'Página\s*\d+',  # "Página X"
-            r'©.*\n',  # Derechos de autor
-            r'www\..*\.com',  # URLs
+            r'\n\d+\s*\n',  
+            r'Página\s*\d+', 
+            r'©.*\n', 
+            r'www\..*\.com',  
         ]
 
         for pattern in patterns:
@@ -37,32 +35,27 @@ class TextCleaner:
         return text
 
     def _fix_punctuation(self, text: str) -> str:
-        """Corrige problemas de puntuación"""
-        # Asegurar espacios después de puntuación
+
         text = re.sub(r'([.!?])([A-Z])', r'\1 \2', text)
 
-        # Eliminar espacios antes de puntuación
         text = re.sub(r'\s+([,.!?;:])', r'\1', text)
 
         return text
 
     def _normalize_paragraphs(self, text: str) -> str:
-        """Normaliza párrafos para mejor lectura"""
-        # Unir líneas que probablemente son el mismo párrafo
+
         text = re.sub(r'(\w)\n(\w)', r'\1 \2', text)
 
-        # Mantener saltos de línea después de puntos
         text = re.sub(r'([.!?])\s*', r'\1\n\n', text)
 
         return text
 
     def _remove_excessive_spaces(self, text: str) -> str:
-        """Elimina espacios excesivos"""
         text = re.sub(r' +', ' ', text)
         text = re.sub(r'\n\s*\n', '\n\n', text)
         return text.strip()
 
     def split_into_sentences(self, text: str) -> List[str]:
-        """Divide el texto en oraciones"""
         from nltk.tokenize import sent_tokenize
+
         return sent_tokenize(text)
