@@ -11,7 +11,7 @@ def crear_pdf_prueba():
     c.drawString(100, 800, "Libro de Prueba para Conversión")
 
     c.setFont("Helvetica", 12)
-    c.drawString(100, 770, "Por: Asistente de Python")
+    c.drawString(100, 770, "Por: Adrián Ron")
 
     texto = [
         "Este es un párrafo de ejemplo para probar la conversión",
@@ -20,7 +20,7 @@ def crear_pdf_prueba():
         "correctamente con caracteres especiales y acentos.",
         "",
         "El segundo párrafo continúa con más texto de prueba.",
-        "Aquí podemos incluir números: 123, símbolos: ¡¿!?, y",
+        "Aquí podemos incluir números: 1 2 3, símbolos: ¡¿!?, y",
         "caracteres especiales del español como ñ, á, é, í, ó, ú.",
         "",
         "Finalmente, este es el tercer párrafo que demuestra",
@@ -47,4 +47,5 @@ def crear_pdf_prueba():
 if __name__ == "__main__":
 
     crear_pdf_prueba()
+
 
