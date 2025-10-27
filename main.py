@@ -32,7 +32,6 @@ class PDFToAudiobookConverter:
         self.audio_manager = AudioManager(self.config)
 
     def convert(self, pdf_path: str, output_path: str = None) -> bool:
-        """Convierte PDF a audiolibro con interfaz profesional"""
         try:
             start_time = datetime.now()
 
@@ -89,7 +88,7 @@ class PDFToAudiobookConverter:
             return False
 
     def _show_document_info(self, metadata: dict):
-        """Muestra información del documento"""
+
         table = Table(show_header=True, header_style="bold magenta")
         table.add_column("Propiedad", style="cyan")
         table.add_column("Valor", style="white")
@@ -180,3 +179,4 @@ def main():
 if __name__ == "__main__":
 
     main()
+
