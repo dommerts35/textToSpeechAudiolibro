@@ -1,4 +1,3 @@
-# main.py
 import os
 import sys
 import logging
@@ -12,7 +11,6 @@ from pdf_processor import PDFProcessor
 from audio_manager import AudioManager
 from config import Config
 
-# Configuración de logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -38,12 +36,10 @@ class PDFToAudiobookConverter:
         try:
             start_time = datetime.now()
 
-            # Verificar archivo de entrada
             if not os.path.exists(pdf_path):
                 console.print(f"❌ [red]Error: El archivo {pdf_path} no existe[/red]")
                 return False
 
-            # Configurar rutas de salida
             if not output_path:
                 base_name = os.path.splitext(os.path.basename(pdf_path))[0]
                 output_dir = self.config.output_dir
@@ -64,20 +60,16 @@ class PDFToAudiobookConverter:
                     TimeElapsedColumn(),
             ) as progress:
 
-                # Paso 1: Extraer y procesar texto
                 task1 = progress.add_task("[cyan]Extrayendo texto del PDF...", total=1)
                 metadata = self.pdf_processor.extract_text_with_metadata(pdf_path)
                 progress.update(task1, advance=1)
 
-                # Mostrar información del documento
                 self._show_document_info(metadata)
 
-                # Paso 2: Dividir en capítulos
                 task2 = progress.add_task("[green]Organizando en capítulos...", total=1)
                 chapters = self.pdf_processor.split_into_chapters(metadata['text'])
                 progress.update(task2, advance=1)
 
-                # Paso 3: Convertir a audio
                 task3 = progress.add_task("[yellow]Convirtiendo a audio...", total=len(chapters))
 
                 conversion_results = self.audio_manager.convert_chapters_to_audio(
@@ -85,11 +77,9 @@ class PDFToAudiobookConverter:
                     output_path
                 )
 
-                # Actualizar progreso
                 for _ in chapters:
                     progress.update(task3, advance=1)
 
-            # Mostrar resultados finales
             self._show_conversion_results(conversion_results, start_time)
             return len(conversion_results['successful']) > 0
 
@@ -113,7 +103,6 @@ class PDFToAudiobookConverter:
         console.print(Panel.fit(table, title="📊 [bold]INFORMACIÓN DEL DOCUMENTO[/bold]"))
 
     def _show_conversion_results(self, results: dict, start_time: datetime):
-        """Muestra los resultados de la conversión"""
         duration = datetime.now() - start_time
 
         console.print(Panel.fit(
@@ -152,7 +141,6 @@ class PDFToAudiobookConverter:
 
 
 def main():
-    """Función principal con interfaz mejorada"""
     console.print("\n")
     console.print(Panel.fit(
         "[bold yellow]📚 CONVERSOR PROFESIONAL PDF A AUDIOLIBRO[/bold yellow]\n"
@@ -174,7 +162,6 @@ def main():
 
     output_path = sys.argv[2] if len(sys.argv) > 2 else None
 
-    # Convertir
     converter = PDFToAudiobookConverter()
     success = converter.convert(pdf_path, output_path)
 
@@ -191,4 +178,5 @@ def main():
 
 
 if __name__ == "__main__":
+
     main()
