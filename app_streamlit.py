@@ -150,7 +150,6 @@ class StreamlitApp:
             """, unsafe_allow_html=True)
 
     def process_pdf(self, pdf_path: str, original_filename: str):
-        """Procesa el PDF y convierte a audio"""
         try:
             progress_bar = st.progress(0)
             status_text = st.empty()
@@ -253,4 +252,5 @@ def main():
 if __name__ == "__main__":
 
     main()
+
 
