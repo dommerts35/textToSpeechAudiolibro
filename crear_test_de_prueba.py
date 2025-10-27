@@ -3,7 +3,6 @@ import os
 
 
 def crear_pdf_prueba():
-    """Crea un PDF simple de prueba"""
     filename = "test.pdf"
 
     c = canvas.Canvas(filename)
@@ -48,3 +47,4 @@ def crear_pdf_prueba():
 if __name__ == "__main__":
 
     crear_pdf_prueba()
+
