@@ -1,4 +1,3 @@
-# crear_pdf_prueba.py
 from reportlab.pdfgen import canvas
 import os
 
@@ -9,15 +8,12 @@ def crear_pdf_prueba():
 
     c = canvas.Canvas(filename)
 
-    # Configurar título
     c.setFont("Helvetica-Bold", 16)
     c.drawString(100, 800, "Libro de Prueba para Conversión")
 
-    # Configurar autor
     c.setFont("Helvetica", 12)
     c.drawString(100, 770, "Por: Asistente de Python")
 
-    # Texto de ejemplo
     texto = [
         "Este es un párrafo de ejemplo para probar la conversión",
         "de PDF a audiolibro. Contiene varias oraciones en español",
@@ -37,7 +33,7 @@ def crear_pdf_prueba():
     y_position = 730
 
     for linea in texto:
-        if y_position < 50:  # Nueva página si se acaba el espacio
+        if y_position < 50: 
             c.showPage()
             c.setFont("Helvetica", 10)
             y_position = 800
@@ -50,4 +46,5 @@ def crear_pdf_prueba():
 
 
 if __name__ == "__main__":
+
     crear_pdf_prueba()
