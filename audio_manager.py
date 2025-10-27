@@ -15,7 +15,6 @@ class AudioManager:
         self.logger = logger
 
     def convert_chapters_to_audio(self, chapters: List[Dict], base_output_path: str) -> Dict:
-        """Convierte múltiples capítulos a audio"""
         try:
             results = {
                 'successful': [],
@@ -59,7 +58,6 @@ class AudioManager:
             return {'successful': [], 'failed': [], 'total_chapters': len(chapters)}
 
     def text_to_speech(self, text: str, output_path: str, language: str = "es") -> bool:
-        """Convierte texto a audio, manejando textos largos automáticamente"""
         try:
             if not text.strip():
                 self.logger.warning("Texto vacío, no se puede convertir")
@@ -78,7 +76,6 @@ class AudioManager:
             return False
 
     def _convert_chunk(self, text: str, output_path: str, language: str) -> bool:
-        """Convierte un chunk de texto a audio"""
         try:
 
             safe_text = text[:self.config.tts.max_chunk_length]
@@ -99,7 +96,6 @@ class AudioManager:
             return False
 
     def _convert_long_text(self, chunks: List[str], output_path: str, language: str) -> bool:
-        """Convierte texto largo dividiéndolo en chunks"""
         try:
             audio_files = []
 
@@ -136,7 +132,6 @@ class AudioManager:
             return False
 
     def _sanitize_filename(self, filename: str) -> str:
-        """Limpia el nombre de archivo de caracteres inválidos"""
         import re
         cleaned = re.sub(r'[<>:"/\\|?*]', '', filename)
         cleaned = cleaned[:50]
@@ -147,3 +142,4 @@ class AudioManager:
         words = len(text.split())
 
         return words / 150.0
+
