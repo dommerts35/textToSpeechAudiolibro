@@ -1,4 +1,3 @@
-# test_simple.py
 import PyPDF2
 from gtts import gTTS
 import os
@@ -8,12 +7,10 @@ def convert_pdf_simple(pdf_path, output_path):
     try:
         print(f"📖 Leyendo PDF: {pdf_path}")
 
-        # Verificar que el archivo existe
         if not os.path.exists(pdf_path):
             print(f"❌ Error: El archivo {pdf_path} no existe")
             return False
 
-        # Extraer texto
         with open(pdf_path, 'rb') as file:
             pdf_reader = PyPDF2.PdfReader(file)
             text = ""
@@ -28,12 +25,11 @@ def convert_pdf_simple(pdf_path, output_path):
         print(f"📝 Texto extraído: {len(text)} caracteres")
 
         if text.strip():
-            # Mostrar preview del texto
+
             print("--- PRIMEROS 500 CARACTERES ---")
             print(text[:500])
             print("--- FIN DEL PREVIEW ---")
 
-            # Convertir a audio (solo primeros 2000 caracteres para prueba)
             test_text = text[:2000] if len(text) > 2000 else text
             print(f"🎙️ Convirtiendo {len(test_text)} caracteres a audio...")
 
@@ -62,10 +58,9 @@ def convert_pdf_simple(pdf_path, output_path):
 
 
 if __name__ == "__main__":
-    # Nombre del archivo PDF de prueba
+
     pdf_file = "test.pdf"
 
-    # Si no existe test.pdf, preguntar al usuario
     if not os.path.exists(pdf_file):
         print("⚠️  Archivo 'test.pdf' no encontrado")
         pdf_file = input("📝 Ingresa la ruta de tu archivo PDF: ").strip().strip('"')
@@ -79,4 +74,5 @@ if __name__ == "__main__":
         print("\n🎉 ¡CONVERSIÓN EXITOSA!")
         print(f"🔊 El archivo de audio está en: {os.path.abspath(output_file)}")
     else:
+
         print("\n💥 CONVERSIÓN FALLIDA")
