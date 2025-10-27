@@ -21,7 +21,6 @@ class TextCleaner:
         return text
 
     def _remove_header_footer(self, text: str) -> str:
-        """Elimina encabezados y pies de página comunes"""
         patterns = [
             r'\n\d+\s*\n',  
             r'Página\s*\d+', 
@@ -59,3 +58,4 @@ class TextCleaner:
         from nltk.tokenize import sent_tokenize
 
         return sent_tokenize(text)
+
