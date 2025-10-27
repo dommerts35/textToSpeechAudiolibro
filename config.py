@@ -1,4 +1,3 @@
-# config.py
 import os
 from dataclasses import dataclass
 from typing import List
@@ -47,4 +46,5 @@ class Config:
 
     def setup_directories(self):
         """Crea los directorios necesarios"""
+
         os.makedirs(self.output_dir, exist_ok=True)
